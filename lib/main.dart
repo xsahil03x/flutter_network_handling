@@ -39,37 +39,34 @@ class _MovieScreenState extends State<MovieScreen> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text('Movie Mania',
-            style: TextStyle(color: Color(0xff7cb342), fontSize: 28)),
-        backgroundColor: Color(0xff171717),
+            style: TextStyle(color: Colors.lightGreen, fontSize: 28)),
+        backgroundColor: Colors.black54,
       ),
-      backgroundColor: Color(0xff171717),
-      body: StreamBuilder<ApiResponse<List<Movie>>>(
-        stream: _bloc.movieListStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.LOADING:
-                return Center(
-                  child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(0xff7cb342))),
-                );
-                break;
-              case Status.COMPLETED:
-                return MovieList(movieList: snapshot.data.data);
-                break;
-              case Status.ERROR:
-                return Center(
-                    child: RaisedButton(
-                  color: Color(0xff7cb342),
-                  child: Text('Retry', style: TextStyle(color: Colors.white)),
-                  onPressed: () => _bloc.fetchMovieList(),
-                ));
-                break;
+      backgroundColor: Colors.black54,
+      body: RefreshIndicator(
+        onRefresh: () => _bloc.fetchMovieList(),
+        child: StreamBuilder<ApiResponse<List<Movie>>>(
+          stream: _bloc.movieListStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              switch (snapshot.data.status) {
+                case Status.LOADING:
+                  return Loading();
+                  break;
+                case Status.COMPLETED:
+                  return MovieList(movieList: snapshot.data.data);
+                  break;
+                case Status.ERROR:
+                  return Error(
+                    errorMessage: snapshot.data.message,
+                    onRetryPressed: () => _bloc.fetchMovieList(),
+                  );
+                  break;
+              }
             }
-          }
-          return Container();
-        },
+            return Container();
+          },
+        ),
       ),
     );
   }
@@ -108,6 +105,51 @@ class MovieList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class Error extends StatelessWidget {
+  final String errorMessage;
+
+  final Function onRetryPressed;
+
+  const Error({Key key, this.errorMessage, this.onRetryPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.lightGreen,
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(height: 8),
+          RaisedButton(
+            color: Colors.lightGreen,
+            child: Text('Retry', style: TextStyle(color: Colors.white)),
+            onPressed: onRetryPressed,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+      ),
     );
   }
 }
