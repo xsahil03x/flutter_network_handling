@@ -23,12 +23,12 @@ class MovieBloc {
   }
 
   fetchMovieList() async {
-    movieListSink.add(ApiResponse.loading());
+    movieListSink.add(ApiResponse.loading('Fetching Popular Movies'));
     try {
       List<Movie> movies = await _movieRepository.fetchMovieList();
-      movieListSink.add(ApiResponse.completed(data: movies));
+      movieListSink.add(ApiResponse.completed(movies));
     } catch (e) {
-      movieListSink.add(ApiResponse.error(message: e.toString()));
+      movieListSink.add(ApiResponse.error(e.toString()));
       print(e);
     }
   }

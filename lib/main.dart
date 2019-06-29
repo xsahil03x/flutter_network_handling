@@ -51,7 +51,7 @@ class _MovieScreenState extends State<MovieScreen> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return Loading();
+                  return Loading(loadingMessage: snapshot.data.message);
                   break;
                 case Status.COMPLETED:
                   return MovieList(movieList: snapshot.data.data);
@@ -144,11 +144,29 @@ class Error extends StatelessWidget {
 }
 
 class Loading extends StatelessWidget {
+  final String loadingMessage;
+
+  const Loading({Key key, this.loadingMessage}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            loadingMessage,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.lightGreen,
+              fontSize: 24,
+            ),
+          ),
+          SizedBox(height: 24),
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+          ),
+        ],
       ),
     );
   }
