@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:inject/inject.dart';
 import 'package:network_handling/api_response.dart';
 import 'package:network_handling/movie_repository.dart';
 
 import 'movie_response.dart';
 
 class MovieBloc {
-  MovieRepository _movieRepository;
+  final MovieRepository _movieRepository;
 
   StreamController _movieListController;
 
@@ -16,9 +17,11 @@ class MovieBloc {
   Stream<ApiResponse<List<Movie>>> get movieListStream =>
       _movieListController.stream;
 
-  MovieBloc() {
+  @provide
+  MovieBloc(this._movieRepository);
+
+  init() {
     _movieListController = StreamController<ApiResponse<List<Movie>>>();
-    _movieRepository = MovieRepository();
     fetchMovieList();
   }
 
