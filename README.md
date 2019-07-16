@@ -1,6 +1,8 @@
-# network_handling
+# Network Handling
 
 A Flutter project to show network error handling
+
+<img src="https://miro.medium.com/max/1000/1*wmj8gPDE-lD6UaRq6m29gA.png" alt="Asset">
 
 ## Getting Started
 
