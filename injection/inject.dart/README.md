@@ -1,1 +1,0 @@
-package/inject/README.md
