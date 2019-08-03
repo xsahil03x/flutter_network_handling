@@ -1,6 +1,8 @@
-# network_handling
+# Network Handling [![FlutterWeekly](https://img.shields.io/badge/Flutter%20Weekly-%2366-green.svg)](https://mailchi.mp/flutterweekly/flutter-weekly-66)
 
-A Flutter project to show network error handling
+A Flutter project to show network error handling 
+
+<img src="https://miro.medium.com/max/1000/1*wmj8gPDE-lD6UaRq6m29gA.png" alt="Asset">
 
 ## Getting Started
 
