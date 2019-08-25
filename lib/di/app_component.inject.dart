@@ -30,7 +30,8 @@ class AppComponent$Injector implements _i1.AppComponent {
   }
 
   _i8.MyApp _createMyApp() => _i8.MyApp(_createRouter());
-  _i9.Router _createRouter() => _i9.Router(_createMovieScreen, _createDummy);
+  _i9.Router _createRouter() =>
+      _i9.Router(_createMovieScreen, _createDummyClass);
   _i8.MovieScreen _createMovieScreen() =>
       _widgetsModule.provideMovieScreen(_createMovieBloc());
   _i6.MovieBloc _createMovieBloc() => _singletonMovieBloc ??=
@@ -39,7 +40,8 @@ class AppComponent$Injector implements _i1.AppComponent {
       _appModule.provideMovieRepository(_createApiBaseHelper());
   _i4.ApiBaseHelper _createApiBaseHelper() =>
       _singletonApiBaseHelper ??= _appModule.provideApiBaseHelper();
-  _i10.DummyClass _createDummy() => _widgetsModule.provideDummy(_createMovieBloc());
+  _i10.DummyClass _createDummyClass() =>
+      _widgetsModule.provideDummy(_createMovieBloc());
   @override
   _i8.MyApp get app => _createMyApp();
 }
