@@ -4,28 +4,29 @@ import 'package:inject/inject.dart';
 import 'api_response.dart';
 import 'movie_bloc.dart';
 import 'movie_response.dart';
+import 'routes.dart';
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  final MovieBloc _bloc;
+  final Router _router;
 
   @provide
-  MyApp(this._bloc) : super();
+  const MyApp(this._router);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Network Handling Demo',
-      home: MovieScreen(_bloc),
+      onGenerateRoute: _router.generateRoute,
+      initialRoute: '/',
     );
   }
 }
 
 class MovieScreen extends StatefulWidget {
-  final MovieBloc _bloc;
+  final MovieBloc bloc;
 
-  const MovieScreen(this._bloc) : super();
+  const MovieScreen({Key key, this.bloc}) : super(key: key);
 
   @override
   _MovieScreenState createState() => _MovieScreenState();
@@ -35,7 +36,7 @@ class _MovieScreenState extends State<MovieScreen> {
   @override
   void initState() {
     super.initState();
-    widget._bloc.init();
+    widget.bloc.init();
   }
 
   @override
@@ -49,9 +50,9 @@ class _MovieScreenState extends State<MovieScreen> {
       ),
       backgroundColor: Colors.black54,
       body: RefreshIndicator(
-        onRefresh: () => widget._bloc.fetchMovieList(),
+        onRefresh: () => widget.bloc.fetchMovieList(),
         child: StreamBuilder<ApiResponse<List<Movie>>>(
-          stream: widget._bloc.movieListStream,
+          stream: widget.bloc.movieListStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
@@ -68,7 +69,7 @@ class _MovieScreenState extends State<MovieScreen> {
                 case Status.ERROR:
                   return Error(
                     errorMessage: snapshot.data.message,
-                    onRetryPressed: () => widget._bloc.fetchMovieList(),
+                    onRetryPressed: () => widget.bloc.fetchMovieList(),
                   );
                   break;
               }
@@ -82,7 +83,7 @@ class _MovieScreenState extends State<MovieScreen> {
 
   @override
   void dispose() {
-    widget._bloc.dispose();
+    widget.bloc.dispose();
     super.dispose();
   }
 }
@@ -103,12 +104,16 @@ class MovieList extends StatelessWidget {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.network(
-                'https://image.tmdb.org/t/p/w342${movieList[index].posterPath}',
-                fit: BoxFit.fill,
+          child: InkWell(
+            onTap: () => Navigator.of(context)
+                .pushNamed('/dummyClass', arguments: movieList[index].title),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.network(
+                  'https://image.tmdb.org/t/p/w342${movieList[index].posterPath}',
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),
