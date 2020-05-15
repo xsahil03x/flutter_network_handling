@@ -2,7 +2,7 @@ import 'package:network_handling/api_base_helper.dart';
 import 'package:network_handling/movie_response.dart';
 
 class MovieRepository {
-  final String _apiKey = "78b9f63937763a206bff26c070b94158";
+  final String _apiKey = "Add your api key here";
 
   ApiBaseHelper _helper = ApiBaseHelper();
 
